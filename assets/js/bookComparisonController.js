@@ -66,9 +66,24 @@ class BookComparisonController {
 
 	setBook(filename) {
 		let isMormon = this.data.booksOverview.filter((d) => d.filename === filename)[0].isMormon;
-		
+
 		d3.csv('assets/dataset/' + filename).then((data) => {
-			console.log(data);
+			data = data.map((d) => {
+				return { frequency: parseFloat(d.frequency), n: parseFloat(d.n), string: d.string };
+			});
+
+			isMormon ? this.data.mormon = data : this.data.nonMormon = data;
+
+			if (this.data.mormon && this.data.nonMormon) {
+				console.log('Starting...');
+				let start = Date.now();
+				let chartData = this.extractIdenticalNGrams();
+				let end = Date.now();
+				console.log('Done!');
+
+				console.log((end - start) / 1000.0);
+				console.log(chartData);
+			}
 		});
 	}
 
@@ -88,5 +103,17 @@ class BookComparisonController {
 		});
 
 		return selector;
+	}
+
+	/** Helper method. Returns dataset of identical NGrams. */
+	extractIdenticalNGrams() {
+		let strings = this.data.nonMormon.map((e) => { return e.string });
+		// console.log(strings);
+
+		return this.data.mormon.filter((d) => {
+			if (strings.includes(d.string))
+				return d;
+		});
+		// return [];
 	}
 }
