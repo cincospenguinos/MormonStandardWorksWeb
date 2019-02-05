@@ -6,7 +6,8 @@
  */
 export class BookSelectorController {
 
-	constructor(mormonBooks, nonMormonBooks) {
+	constructor(mormonBooks, nonMormonBooks, parentContainer) {
+		this.parentContainer = parentContainer;
 		this.mormonBooks = mormonBooks;
 		this.nonMormonBooks = nonMormonBooks;
 
@@ -35,7 +36,6 @@ export class BookSelectorController {
 
 	/** Helper method. Creates various selectors on the page. */
 	_createSelectors() {
-		this.parentContainer = d3.select('#book-selector-container');
 		const mormonBooksContainer = this.parentContainer.append('div').classed('col-md-6', true);
 		const nonMormonBooksContainer = this.parentContainer.append('div').classed('col-md-6', true);
 
