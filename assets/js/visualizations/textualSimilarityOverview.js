@@ -14,6 +14,7 @@ export class TextualSimilarityOverview {
 			bars: {
 				width: 140,
 				xPad: 20,
+				yScale: 50,
 			}
 		};
 
@@ -36,15 +37,14 @@ export class TextualSimilarityOverview {
 	}
 
 	/** Helper method. Extracts the data from the backend into the format that we desire. */
-	_extractDataFrom(data) { // TODO: Fix the data
+	_extractDataFrom(data) {
 		const newFormat = {};
 		Object.keys(data).forEach((nGramSize) => {
 			const dataBit = data[nGramSize];
 
 			newFormat[`${nGramSize}gram`] = {
-				textA: dataBit.countTextA,
-				textB: dataBit.countTextB,
-				similar: dataBit.countSimilar,
+				textA: dataBit.countSimilar / (dataBit.countTextA / 1000.0),
+				textB: dataBit.countSimilar / (dataBit.countTextB / 1000.0),
 			};
 		});
 
@@ -53,8 +53,34 @@ export class TextualSimilarityOverview {
 
 	/** Helper method. Presents the data that was extracted from the backend. */
 	_presentData() {
-		console.log(this.data);
-		throw 'We want better data presentation!';
+		if (!this.nGramGroups) {
+			this._createNGramGroups();
+		}
+
+		// TODO: Remove the old group information
+		let idx = 0;
+		Object.keys(this.data).forEach((key) => {
+			const group = d3.select(`#n-${key}`);
+			const dataBit = this.data[key];
+
+			group.append('rect')
+				.attr('x', idx * (this.dimensions.bars.width + this.dimensions.bars.xPad))
+				.attr('y', 0)
+				.attr('width', this.dimensions.bars.width)
+				.attr('height', dataBit.textA * this.dimensions.bars.yScale);
+
+			idx += 1;
+		});
+	}
+
+	/** Helper method. Creates the various data holders for the nGrams. */
+	_createNGramGroups() {
+		this.nGramGroups = this.rectGroup.selectAll('g')
+			.data(Object.keys(this.data))
+			.enter()
+			.append('g')
+			.attr('id', d => `n-${d}`)
+			.classed('n-gram-bar-group', true);
 	}
 
 	/** Helper method. Creates the various pieces and things, including the axes marks. */
@@ -83,5 +109,7 @@ export class TextualSimilarityOverview {
 			.attr('y1', 0)
 			.attr('x2', 0)
 			.attr('y2', this.dimensions.height);
+
+		this.rectGroup = wrapperGroup.append('g').classed('n-gram-rect-group', true);
 	}
 }

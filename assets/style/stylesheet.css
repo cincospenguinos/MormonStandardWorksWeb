@@ -13,6 +13,10 @@
 	stroke-width: 1px;
 }
 
+.n-gram-rect-group rect {
+	fill: #e6b800;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
