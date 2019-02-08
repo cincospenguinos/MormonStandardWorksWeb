@@ -4,16 +4,14 @@
  * Where the magic happens.
  */
 import { BookSelectorController } from './controllers/bookSelectorController.js';
-import { TextualSimilarityOverview } from './visualizations/textualSimilarityOverview.js';
+import { TextualSimilarityController } from './controllers/textualSimilarityController.js';
 
 let bookSelectorController, mormonBooks, nonMormonBooks;
-let textualSimilarityOverview;
+let textualSimilarityController;
 
 $(document).ready(() => {
 	const bookSelectorParent = d3.select('#book-selector-container');
 	const bookSimilarityParent = d3.select('#book-similarity-overview');
-
-	textualSimilarityOverview = new TextualSimilarityOverview(bookSimilarityParent);
 
 	d3.json('assets/data/analysis_version_info.json').then((data) => {
 		// $('#version-info').append(`v${data.version}`);
@@ -26,8 +24,9 @@ $(document).ready(() => {
 		});
 
 		bookSelectorController = new BookSelectorController(mormonBooks, nonMormonBooks, bookSelectorParent);
+		textualSimilarityController = new TextualSimilarityController(bookSimilarityParent);
 		
 		const books = bookSelectorController.getCurrentlySelected();
-		textualSimilarityOverview.setBooks(books.mormon, books.nonMormon);
+		textualSimilarityController.setBooks(books.mormon, books.nonMormon);
 	});
 });

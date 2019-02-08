@@ -9,6 +9,7 @@ The website component of the Mormon Standard Works project I'm working on.
 
 ## TODO
 
+- [ ] Style the selectors in a nice looking way
 - [ ] Add axis information to the TextualSimilarityOverview
 - [ ] Add labels to the axes of the TextualSimilarityOverview
 - [ ] Get report on where textual similarity occurs in the two texts

@@ -9,10 +9,10 @@ export class TextualSimilarityOverview {
 		this.parentContainer = parentContainer;
 
 		this.dimensions = { 
-			width: 800, 
-			height: 600,
+			width: 600, 
+			height: 400,
 			bars: {
-				width: 140,
+				width: 100,
 				xPad: 20,
 				yScale: 50,
 			}
